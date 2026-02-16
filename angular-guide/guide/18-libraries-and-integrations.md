@@ -21,7 +21,7 @@ These libraries provide pre-built, styled, and accessible UI components, acceler
 *   **Angular Material**: Google's official Material Design component library for Angular.
     *   [Learn more about Angular Material](./17-angular-material.md)
 *   **PrimeNG**: A comprehensive suite of UI components from PrimeFaces, offering a wide range of features and themes.
-    *   [Learn more about PrimeNG](./19-primeng.md) (Chapter not yet available)
+    *   [Learn more about PrimeNG](./19-primeng.md)
 *   **Ng-bootstrap**: Integrates Bootstrap components with Angular, replacing jQuery dependencies with native Angular implementations.
 
 ### State Management Libraries
@@ -29,9 +29,9 @@ These libraries provide pre-built, styled, and accessible UI components, acceler
 While Angular Signals provide powerful built-in state management, larger applications might benefit from dedicated libraries.
 
 *   **NgRx Store**: A Redux-inspired library for predictable state management.
-    *   [Learn more about NgRx Store](./15-ngrx.md) (Chapter not yet available)
+    *   [Learn more about NgRx Store](./15-ngrx.md)
 *   **Signal Store**: A more lightweight, signal-native approach to global state management.
-    *   [Learn more about Signal Store](./16-signal-store.md) (Chapter not yet available)
+    *   [Learn more about Signal Store](./16-signal-store.md)
 
 ### HTTP and Data Fetching
 
@@ -46,7 +46,7 @@ For advanced data fetching scenarios beyond `HttpClient`, or for GraphQL integra
 ### Animation Libraries
 
 *   **Angular Animations**: Angular's built-in animation system.
-    *   [Learn more about Animations](./21-animations.md) (Chapter not yet available)
+    *   [Learn more about Animations](./21-animations.md)
 *   **Lottie-web**: For adding After Effects animations to your web projects.
 
 ### Utilities

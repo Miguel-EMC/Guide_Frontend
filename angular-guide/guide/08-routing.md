@@ -57,6 +57,7 @@ export const routes: Routes = [
 ### Basic Routes
 
 ```typescript
+import { Routes } from '@angular/router';
 export const routes: Routes = [
   // Static path
   { path: 'home', component: HomeComponent },
@@ -75,6 +76,7 @@ export const routes: Routes = [
 ### Route Parameters
 
 ```typescript
+import { Routes } from '@angular/router';
 export const routes: Routes = [
   // Required parameter
   { path: 'users/:id', component: UserDetailComponent },
@@ -90,6 +92,7 @@ export const routes: Routes = [
 ### Child Routes
 
 ```typescript
+import { Routes } from '@angular/router';
 export const routes: Routes = [
   {
     path: 'admin',
@@ -124,6 +127,7 @@ export const routes: Routes = [
 ### Named Outlets
 
 ```typescript
+import { Routes } from '@angular/router';
 export const routes: Routes = [
   { path: 'home', component: HomeComponent },
   { path: 'sidebar', component: SidebarComponent, outlet: 'sidebar' },
@@ -189,6 +193,7 @@ export const routes: Routes = [
 ### Programmatic Navigation
 
 ```typescript
+import { Component, inject } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({...})
@@ -240,8 +245,10 @@ export class NavigationComponent {
 ### Route Parameters
 
 ```typescript
-import { Component, inject } from '@angular/core';
+import { Component, inject, input } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 @Component({...})
 export class UserDetailComponent {
@@ -263,6 +270,9 @@ export class UserDetailComponent {
 ### Query Parameters
 
 ```typescript
+import { Component, inject, input } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { Observable } from 'rxjs';
 @Component({...})
 export class SearchComponent {
   private route = inject(ActivatedRoute);
@@ -283,6 +293,8 @@ export class SearchComponent {
 ### Route Data
 
 ```typescript
+import { Component, inject } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 // Route configuration
 {
   path: 'admin',
@@ -305,6 +317,8 @@ export class AdminComponent {
 **app.config.ts:**
 
 ```typescript
+import { provideRouter } from '@angular/router';
+import { ApplicationConfig } from '@angular/core';
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes, withComponentInputBinding())
@@ -315,6 +329,7 @@ export const appConfig: ApplicationConfig = {
 **Component:**
 
 ```typescript
+import { Component, input } from '@angular/core';
 @Component({...})
 export class ProductDetailComponent {
   // Automatically bound from route param :id
@@ -333,6 +348,7 @@ export class ProductDetailComponent {
 ### CanActivate
 
 ```typescript
+import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 
 export const authGuard: CanActivateFn = (route, state) => {
@@ -360,6 +376,8 @@ export const authGuard: CanActivateFn = (route, state) => {
 ### CanActivateChild
 
 ```typescript
+import { inject } from '@angular/core';
+import { CanActivateFn } from '@angular/router';
 export const adminGuard: CanActivateFn = (route, state) => {
   const authService = inject(AuthService);
   return authService.isAdmin();
@@ -379,6 +397,8 @@ export const adminGuard: CanActivateFn = (route, state) => {
 ### CanDeactivate
 
 ```typescript
+import { Component, signal } from '@angular/core';
+import { Observable } from 'rxjs';
 export interface CanDeactivateComponent {
   canDeactivate: () => boolean | Observable<boolean>;
 }
@@ -412,6 +432,7 @@ export class EditFormComponent implements CanDeactivateComponent {
 ### CanMatch
 
 ```typescript
+import { inject } from '@angular/core';
 export const featureFlagGuard: CanMatchFn = (route, segments) => {
   const featureService = inject(FeatureService);
   return featureService.isEnabled('new-feature');
@@ -429,7 +450,8 @@ export const featureFlagGuard: CanMatchFn = (route, segments) => {
 Pre-fetch data before route activation:
 
 ```typescript
-import { ResolveFn } from '@angular/router';
+import { Component, inject, input } from '@angular/core';
+import { ResolveFn, ActivatedRoute } from '@angular/router';
 
 export const userResolver: ResolveFn<User> = (route) => {
   const userService = inject(UserService);
@@ -460,6 +482,7 @@ export class UserDetailComponent {
 ### Lazy Load Routes
 
 ```typescript
+import { Routes } from '@angular/router';
 export const routes: Routes = [
   { path: '', component: HomeComponent },
 
@@ -480,6 +503,7 @@ export const routes: Routes = [
 **admin/admin.routes.ts:**
 
 ```typescript
+import { Routes } from '@angular/router';
 export const ADMIN_ROUTES: Routes = [
   { path: '', component: AdminLayoutComponent, children: [
     { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
@@ -493,6 +517,7 @@ export const ADMIN_ROUTES: Routes = [
 
 ```typescript
 import { provideRouter, withPreloading, PreloadAllModules } from '@angular/router';
+import { ApplicationConfig } from '@angular/core';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -504,7 +529,9 @@ export const appConfig: ApplicationConfig = {
 **Custom Preloading:**
 
 ```typescript
-import { PreloadingStrategy, Route } from '@angular/router';
+import { Injectable } from '@angular/core';
+import { PreloadingStrategy, Route, provideRouter } from '@angular/router';
+import { Observable, of } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class SelectivePreloadingStrategy implements PreloadingStrategy {
@@ -530,6 +557,8 @@ provideRouter(routes, withPreloading(SelectivePreloadingStrategy))
 ## Router Events
 
 ```typescript
+import { Component, inject } from '@angular/core';
+import { Router } from '@angular/router';
 @Component({...})
 export class AppComponent {
   private router = inject(Router);
@@ -558,6 +587,8 @@ export class AppComponent {
 ### Loading Indicator
 
 ```typescript
+import { Component, inject, signal } from '@angular/core';
+import { Router } from '@angular/router';
 @Component({
   template: `
     @if (isLoading()) {
@@ -590,6 +621,7 @@ export class AppComponent {
 Enable smooth page transitions:
 
 ```typescript
+import { provideRouter, withViewTransitions } from '@angular/router';
 provideRouter(routes, withViewTransitions())
 ```
 
@@ -623,6 +655,8 @@ provideRouter(routes, withViewTransitions())
 ## Router State
 
 ```typescript
+import { Component, inject, computed } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
 @Component({...})
 export class BreadcrumbComponent {
   private router = inject(Router);

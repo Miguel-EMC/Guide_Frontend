@@ -215,6 +215,9 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 ```
 
 ```typescript
+import { Component, ViewChild, OnInit, AfterViewInit } from '@angular/core';
+import { MatSort } from '@angular/material/sort';
+import { MatPaginator } from '@angular/material/paginator';
 @Component({
   imports: [MatTableModule, MatSortModule, MatPaginatorModule],
   template: `
@@ -276,7 +279,9 @@ export class TableComponent implements OnInit, AfterViewInit {
 ### Dialogs
 
 ```typescript
+import { Component, inject } from '@angular/core';
 import { MatDialogModule, MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
 
 // Dialog component
 @Component({
@@ -326,6 +331,7 @@ export class ParentComponent {
 ### Snackbar
 
 ```typescript
+import { Component, inject } from '@angular/core';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 @Component({
@@ -490,6 +496,8 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 ```
 
 ```typescript
+import { Component, computed, signal } from '@angular/core';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 @Component({
   imports: [MatAutocompleteModule, MatFormFieldModule, MatInputModule, ReactiveFormsModule],
   template: `

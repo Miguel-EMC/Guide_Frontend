@@ -272,6 +272,7 @@ Listen to DOM events:
 Combine property and event binding:
 
 ```typescript
+import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 @Component({

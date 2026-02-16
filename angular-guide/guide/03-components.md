@@ -59,6 +59,7 @@ export class UserProfileComponent {
 ### Inline Template and Styles
 
 ```typescript
+import { Component } from '@angular/core';
 @Component({
   selector: 'app-inline-example',
   standalone: true,
@@ -91,6 +92,7 @@ The selector determines how the component is used in templates.
 ### Element Selector (Most Common)
 
 ```typescript
+import { Component } from '@angular/core';
 @Component({
   selector: 'app-user-card',
   // ...
@@ -107,6 +109,7 @@ The selector determines how the component is used in templates.
 ### Attribute Selector
 
 ```typescript
+import { Component } from '@angular/core';
 @Component({
   selector: '[appHighlight]',
   // ...
@@ -121,6 +124,7 @@ The selector determines how the component is used in templates.
 ### Class Selector
 
 ```typescript
+import { Component } from '@angular/core';
 @Component({
   selector: '.app-widget',
   // ...
@@ -177,7 +181,7 @@ export class UserCardComponent {
 ### Input Options
 
 ```typescript
-import { numberAttribute, booleanAttribute } from '@angular/core';
+import { numberAttribute, booleanAttribute, input } from '@angular/core';
 
 // With alias (use different name in template)
 name = input.required<string>({ alias: 'userName' });
@@ -268,6 +272,7 @@ onDecrement(value: number) {
 ### Output with Alias
 
 ```typescript
+import { output } from '@angular/core';
 valueChanged = output<number>({ alias: 'change' });
 ```
 
@@ -279,7 +284,7 @@ valueChanged = output<number>({ alias: 'change' });
 
 ```typescript
 import { output, outputFromObservable } from '@angular/core';
-import { interval } from 'rxjs';
+import { interval, Observable } from 'rxjs';
 
 // Create output from Observable
 tick = outputFromObservable(interval(1000));
@@ -339,6 +344,7 @@ export class ToggleComponent {
 ```
 
 ```typescript
+import { signal } from '@angular/core';
 isEnabled = signal(false);
 ```
 
@@ -351,6 +357,7 @@ value = model.required<string>();
 ### Model with Alias
 
 ```typescript
+import { model } from '@angular/core';
 value = model(0, { alias: 'count' });
 ```
 
@@ -381,6 +388,7 @@ Angular components have lifecycle hooks that let you tap into key moments.
 ```typescript
 import {
   Component,
+  ViewChild,
   OnInit,
   OnDestroy,
   OnChanges,
@@ -459,6 +467,7 @@ Content projection allows you to insert content from a parent into a child compo
 **Child component:**
 
 ```typescript
+import { Component } from '@angular/core';
 @Component({
   selector: 'app-card',
   standalone: true,
@@ -490,6 +499,7 @@ export class CardComponent {}
 ### Multi-Slot Projection
 
 ```typescript
+import { Component } from '@angular/core';
 @Component({
   selector: 'app-dialog',
   standalone: true,
@@ -541,6 +551,7 @@ export class DialogComponent {}
 ### Conditional Content with @if
 
 ```typescript
+import { Component, signal } from '@angular/core';
 @Component({
   selector: 'app-expandable',
   template: `
@@ -604,7 +615,7 @@ export class ParentComponent implements AfterViewInit {
 ### viewChildren
 
 ```typescript
-import { Component, viewChildren } from '@angular/core';
+import { Component, viewChildren, signal } from '@angular/core';
 import { ListItemComponent } from './list-item.component';
 
 @Component({
@@ -767,7 +778,7 @@ export class OptimizedComponent {
 ### Manual Change Detection
 
 ```typescript
-import { Component, ChangeDetectorRef, inject } from '@angular/core';
+import { Component, ChangeDetectorRef, inject, ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -793,6 +804,7 @@ Interact with the component's host element.
 ### host Property
 
 ```typescript
+import { Component, input } from '@angular/core';
 @Component({
   selector: 'app-button',
   standalone: true,

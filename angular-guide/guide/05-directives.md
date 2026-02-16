@@ -17,7 +17,7 @@ Directives are classes that add behavior to elements in Angular applications. Th
 Dynamically add/remove CSS classes:
 
 ```typescript
-import { Component } from '@angular/core';
+import { Component, signal, computed } from '@angular/core';
 import { NgClass } from '@angular/common';
 
 @Component({
@@ -67,6 +67,7 @@ export class ExampleComponent {
 Dynamically set inline styles:
 
 ```typescript
+import { Component, signal, computed } from '@angular/core';
 import { NgStyle } from '@angular/common';
 
 @Component({
@@ -104,6 +105,7 @@ export class StyleComponent {
 Two-way data binding for form elements:
 
 ```typescript
+import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 @Component({
@@ -143,10 +145,11 @@ export class FormComponent {
 ### *ngIf (Legacy)
 
 ```typescript
-import { NgIf } from '@angular/common';
+import { Component } from '@angular/core';
+import { AsyncPipe, NgIf } from '@angular/common';
 
 @Component({
-  imports: [NgIf],
+  imports: [NgIf, AsyncPipe],
   template: `
     <!-- Basic -->
     <div *ngIf="isVisible">Visible content</div>
@@ -179,6 +182,7 @@ import { NgIf } from '@angular/common';
 ### *ngFor (Legacy)
 
 ```typescript
+import { Component } from '@angular/core';
 import { NgFor } from '@angular/common';
 
 @Component({
@@ -227,6 +231,7 @@ export class ListComponent {
 ### *ngSwitch (Legacy)
 
 ```typescript
+import { Component } from '@angular/core';
 import { NgSwitch, NgSwitchCase, NgSwitchDefault } from '@angular/common';
 
 @Component({
@@ -612,6 +617,7 @@ export class ClickOutsideDirective {
 ### Auto Focus
 
 ```typescript
+import { inject, Directive, ElementRef, AfterViewInit } from '@angular/core';
 @Directive({
   selector: '[appAutoFocus]',
   standalone: true
@@ -628,6 +634,9 @@ export class AutoFocusDirective implements AfterViewInit {
 ### Debounce Click
 
 ```typescript
+import { input, Directive, HostListener, output } from '@angular/core';
+import { debounceTime } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 @Directive({
   selector: '[appDebounceClick]',
   standalone: true
@@ -657,6 +666,7 @@ export class DebounceClickDirective {
 ### Lazy Load Image
 
 ```typescript
+import { inject, Directive, ElementRef, OnInit, OnDestroy } from '@angular/core';
 @Directive({
   selector: 'img[appLazyLoad]',
   standalone: true

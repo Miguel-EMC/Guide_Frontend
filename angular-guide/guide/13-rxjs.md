@@ -88,7 +88,8 @@ subscription.unsubscribe();
 ### Transformation
 
 ```typescript
-import { map, pluck, mapTo, scan, reduce } from 'rxjs/operators';
+import { map, scan, reduce } from 'rxjs/operators';
+import { of } from 'rxjs';
 
 // map - transform each value
 of(1, 2, 3).pipe(
@@ -109,7 +110,8 @@ of(1, 2, 3).pipe(
 ### Filtering
 
 ```typescript
-import { filter, take, takeUntil, takeWhile, first, last, skip, distinctUntilChanged } from 'rxjs/operators';
+import { filter, take, takeUntil, first, distinctUntilChanged } from 'rxjs/operators';
+import { interval, timer, of } from 'rxjs';
 
 // filter - only matching values
 of(1, 2, 3, 4, 5).pipe(
@@ -140,7 +142,7 @@ of(1, 2, 3).pipe(first(x => x > 1)); // 2
 ### Combination
 
 ```typescript
-import { combineLatest, merge, concat, forkJoin, zip, withLatestFrom } from 'rxjs';
+import { combineLatest, merge, concat, forkJoin, zip, withLatestFrom, of } from 'rxjs';
 
 const a$ = of(1, 2);
 const b$ = of('a', 'b');
@@ -195,8 +197,8 @@ clicks$.pipe(
 ### Error Handling
 
 ```typescript
-import { catchError, retry, retryWhen, throwError } from 'rxjs';
-import { delay } from 'rxjs/operators';
+import { catchError, retry, timer, of } from 'rxjs';
+import { catchError, retry } from 'rxjs/operators';
 
 // catchError - handle errors
 http.get('/api/data').pipe(
@@ -231,7 +233,8 @@ http.get('/api/data').pipe(
 ### Timing
 
 ```typescript
-import { debounceTime, throttleTime, delay, timeout, auditTime, sampleTime } from 'rxjs/operators';
+import { debounceTime, throttleTime, delay, timeout } from 'rxjs/operators';
+import { of } from 'rxjs';
 
 // debounceTime - wait for pause
 searchInput$.pipe(
@@ -359,6 +362,9 @@ subject.complete(); // Now emits: 3
 ### Search with Debounce
 
 ```typescript
+import { Component, input, signal } from '@angular/core';
+import { switchMap, filter, debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 @Component({
   template: `
     <input (input)="onSearch($event)" />
@@ -391,6 +397,9 @@ export class SearchComponent {
 ### Auto-refresh
 
 ```typescript
+import { Component } from '@angular/core';
+import { switchMap, shareReplay } from 'rxjs/operators';
+import { Subject, interval, merge } from 'rxjs';
 @Component({...})
 export class DashboardComponent {
   private refresh$ = new Subject<void>();
@@ -413,6 +422,8 @@ export class DashboardComponent {
 ### Polling
 
 ```typescript
+import { switchMap, retry, takeUntil } from 'rxjs/operators';
+import { timer } from 'rxjs';
 pollData() {
   return timer(0, 5000).pipe(
     switchMap(() => this.http.get<Data>('/api/data')),
@@ -425,6 +436,7 @@ pollData() {
 ### Race Condition Prevention
 
 ```typescript
+import { switchMap, exhaustMap } from 'rxjs/operators';
 // Cancel previous request when new one starts
 loadUser(id: number) {
   return this.userId$.pipe(
@@ -445,7 +457,10 @@ submitForm() {
 ### toSignal
 
 ```typescript
+import { Component } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { catchError } from 'rxjs/operators';
+import { of } from 'rxjs';
 
 @Component({...})
 export class DataComponent {
@@ -467,7 +482,9 @@ export class DataComponent {
 ### toObservable
 
 ```typescript
+import { Component, signal } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
+import { switchMap, debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 @Component({...})
 export class SearchComponent {
@@ -488,7 +505,9 @@ export class SearchComponent {
 ### takeUntilDestroyed
 
 ```typescript
+import { Component, inject, DestroyRef } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { interval } from 'rxjs';
 
 @Component({...})
 export class AutoCleanupComponent {
@@ -516,6 +535,7 @@ export class ManualCleanupComponent {
 
 ```typescript
 import { TestScheduler } from 'rxjs/testing';
+import { map } from 'rxjs/operators';
 
 describe('Operators', () => {
   let scheduler: TestScheduler;

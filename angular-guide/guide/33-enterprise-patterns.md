@@ -89,6 +89,7 @@ export class UserId {
 #### Domain Services
 
 ```typescript
+import { Injectable } from '@angular/core';
 // domain/services/auth.domain.service.ts
 @Injectable({ providedIn: 'root' })
 export class AuthDomainService {
@@ -153,6 +154,7 @@ export class UpdateUserCommand {
 #### Command Handlers
 
 ```typescript
+import { Injectable } from '@angular/core';
 // handlers/create-user.command.handler.ts
 @Injectable({ providedIn: 'root' })
 export class CreateUserCommandHandler {
@@ -191,6 +193,7 @@ export class CreateUserCommandHandler {
 #### Queries
 
 ```typescript
+import { Injectable } from '@angular/core';
 // queries/get-users.query.ts
 export class GetUsersQuery {
   constructor(
@@ -251,6 +254,7 @@ export class UserRoleChangedEvent extends DomainEvent {
 #### Event Handlers
 
 ```typescript
+import { Injectable } from '@angular/core';
 // event-handlers/send-welcome-email.handler.ts
 @Injectable({ providedIn: 'root' })
 export class SendWelcomeEmailHandler implements EventHandler<UserCreatedEvent> {
@@ -489,6 +493,9 @@ export const selectSelectedUser = createSelector(
 ### 1. JWT with Refresh Tokens
 
 ```typescript
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { tap, map } from 'rxjs/operators';
 // core/infrastructure/security/token.service.ts
 @Injectable({ providedIn: 'root' })
 export class TokenService {
@@ -552,6 +559,8 @@ export class TokenService {
 ### 2. Role-Based Access Control (RBAC)
 
 ```typescript
+import { Injectable, inject } from '@angular/core';
+import { Router, CanActivateFn } from '@angular/router';
 // core/infrastructure/security/rbac.service.ts
 @Injectable({ providedIn: 'root' })
 export class RBACService {
@@ -610,6 +619,8 @@ export const permissionGuard = (permission: string): CanActivateFn => {
 ### Global Error Handler with Monitoring
 
 ```typescript
+import { Injectable } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
 // core/infrastructure/logging/global-error.handler.ts
 @Injectable()
 export class GlobalErrorHandler implements ErrorHandler {
@@ -686,6 +697,7 @@ export class GlobalErrorHandler implements ErrorHandler {
 ### Multi-Level Caching
 
 ```typescript
+import { Injectable, inject } from '@angular/core';
 // core/infrastructure/caching/cache.service.ts
 @Injectable({ providedIn: 'root' })
 export class CacheService {
@@ -818,6 +830,7 @@ export class UserService {
 ### Application Metrics
 
 ```typescript
+import { Injectable, inject } from '@angular/core';
 // core/infrastructure/monitoring/metrics.service.ts
 @Injectable({ providedIn: 'root' })
 export class MetricsService {
@@ -955,10 +968,9 @@ export class OrderService {
 
 ## Next Steps
 
-- [Enterprise Project](./34-enterprise-project.md) - Build a complete ERP system
-- [CI/CD & DevOps](./35-cicd-devops.md) - Deploy to production
-- [Microservices Architecture](./33-microservices-architecture.md) - Distributed systems
+- [Deployment](./29-deployment.md) - Production rollout
+- [Project: Task Manager App](./30-project-task-manager.md) - Full end-to-end example
 
 ---
 
-[Previous: Architecture](./28-architecture.md) | [Back to Index](./README.md) | [Next: Microservices Architecture](./33-microservices-architecture.md)
+[Previous: Architecture](./28-architecture.md) | [Back to Index](./README.md)

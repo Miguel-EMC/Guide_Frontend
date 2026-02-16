@@ -1,46 +1,64 @@
 # State Management
 
-Managing state is a crucial aspect of building complex Angular applications. State refers to the data that drives your application's UI and business logic. As applications grow, maintaining and synchronizing this data across various components can become challenging.
+Managing state is a crucial aspect of building complex Angular applications. As your app grows, you'll need a clear strategy for local UI state, shared feature state, and server state.
 
-Angular provides several approaches to state management, ranging from simple component-level state to sophisticated global state management solutions.
+## State Layers
 
-## Component State
+- **Local UI State**: Component-only data (form inputs, tabs, toggles). Use signals or component properties.
+- **Feature State**: Shared within a feature area (cart, profile, filters). Use services with signals.
+- **Global App State**: Cross-cutting state (auth, permissions, settings). Use a formal store.
+- **Server State**: Data from APIs that needs caching, refetching, and normalization.
 
-For simple scenarios, state can be managed directly within components using properties and signals. This approach is suitable for data that is only relevant to a single component or a small, closely related group of components.
+## Signals in Services
 
-*   **Signals**: Angular's new reactive primitive, `signal()`, `computed()`, and `effect()`, offer a powerful and efficient way to manage local component state. They provide fine-grained reactivity, making it easy to react to changes and update the UI accordingly.
-    *   [Learn more about Angular Signals](./12-signals.md)
+Signals are ideal for local or feature state in Angular v21.
 
-## Service-Based State
+```typescript
+import { Injectable, computed, signal } from '@angular/core';
+@Injectable({ providedIn: 'root' })
+export class CartStore {
+  private items = signal<CartItem[]>([]);
 
-For state that needs to be shared across multiple components or services, creating a dedicated service to hold and manage this state is a common pattern. This promotes reusability and separation of concerns.
+  readonly itemsCount = computed(() => this.items().length);
+  readonly total = computed(() =>
+    this.items().reduce((sum, item) => sum + item.price * item.qty, 0)
+  );
 
-*   **Simple Store with Signals**: A service can encapsulate signals, providing methods to update state and exposing read-only signals for consumption. This pattern is effective for mid-sized applications that need shared state without the overhead of a full-fledged state management library.
-    *   [Example of Service-Based State Management with Signals in 12-signals.md](./12-signals.md#state-management-with-signals)
+  add(item: CartItem) {
+    this.items.update(items => [...items, item]);
+  }
 
-## Global State Management Libraries
+  remove(id: string) {
+    this.items.update(items => items.filter(i => i.id !== id));
+  }
+}
+```
 
-For large-scale applications with complex state interactions, dedicated state management libraries offer more structured and predictable ways to handle application state.
+## When to Use a Store Library
 
-*   **NgRx Store**: A powerful and opinionated library inspired by Redux, NgRx provides a complete state management solution based on the Redux pattern. It uses a single, immutable store, actions for dispatching changes, reducers for handling state transitions, and effects for side effects. NgRx promotes a clear, predictable, and testable state flow.
-    *   [Learn more about NgRx Store](./15-ngrx.md) (Chapter not yet available)
+Use a formal store when you need:
 
-*   **Signal Store**: Built on top of Angular Signals, Signal Store aims to provide a lightweight and modern state management solution that leverages the performance and ergonomics of signals. It's designed to be a simpler alternative to NgRx for applications that prefer a more signal-centric approach.
-    *   [Learn more about Signal Store](./16-signal-store.md) (Chapter not yet available)
+- Time-travel debugging and devtools
+- Highly predictable global state transitions
+- Complex side effects and data orchestration
+- A standard architecture across large teams
 
-## Choosing a Strategy
+## Popular Options
 
-The choice of state management strategy depends on the complexity and scale of your application:
+- **NgRx Store**: Redux-style state with actions, reducers, selectors, and effects
+- **Signal Store**: Signal-first store patterns (NgRx Signals)
 
-*   **Component State**: Ideal for local component data.
-*   **Service-Based State (with Signals)**: Great for sharing state across a few related components, offering good balance between simplicity and maintainability.
-*   **NgRx Store**: Best for large, complex applications requiring a highly predictable, scalable, and debuggable state management solution.
-*   **Signal Store**: A promising option for applications seeking a modern, signal-native approach to global state.
+## Best Practices
+
+- Keep state normalized for large collections
+- Separate read models from write models (CQRS-style)
+- Avoid storing derived data; compute it
+- Prefer feature stores over a single giant global store
 
 ## Next Steps
 
-- [NgRx Store](./15-ngrx.md) - Learn about Redux-style state management
-- [Signal Store](./16-signal-store.md) - Explore signal-based state management
+- [NgRx Store](./15-ngrx.md) - Redux-style state management
+- [Signal Store](./16-signal-store.md) - Signal-first store architecture
 
 ---
 

@@ -93,6 +93,7 @@ export class UserListComponent {
 ### Root Level (Singleton)
 
 ```typescript
+import { Injectable } from '@angular/core';
 @Injectable({
   providedIn: 'root'  // Single instance for entire app
 })
@@ -102,6 +103,7 @@ export class ConfigService {}
 ### Platform Level
 
 ```typescript
+import { Injectable } from '@angular/core';
 @Injectable({
   providedIn: 'platform'  // Shared across multiple apps
 })
@@ -111,6 +113,7 @@ export class AnalyticsService {}
 ### Any Level
 
 ```typescript
+import { Injectable } from '@angular/core';
 @Injectable({
   providedIn: 'any'  // New instance per lazy-loaded module
 })
@@ -120,6 +123,7 @@ export class FeatureService {}
 ### Component Level (Per Instance)
 
 ```typescript
+import { Component, inject } from '@angular/core';
 @Component({
   selector: 'app-feature',
   providers: [FeatureService]  // New instance per component
@@ -134,7 +138,7 @@ export class FeatureComponent {
 ### Basic Token
 
 ```typescript
-import { InjectionToken, inject } from '@angular/core';
+import { InjectionToken, inject, Injectable, ApplicationConfig } from '@angular/core';
 
 // Define token
 export const API_URL = new InjectionToken<string>('API URL');
@@ -160,6 +164,7 @@ export class ApiService {
 ### Factory Token
 
 ```typescript
+import { inject } from '@angular/core';
 export const LOGGER = new InjectionToken<Logger>('Logger', {
   providedIn: 'root',
   factory: () => {
@@ -194,6 +199,7 @@ export const LOGGER = new InjectionToken<Logger>('Logger', {
 ### useFactory
 
 ```typescript
+import { HttpClient } from '@angular/common/http';
 // Provide with factory function
 {
   provide: DataService,
@@ -218,6 +224,8 @@ export const LOGGER = new InjectionToken<Logger>('Logger', {
 ### App Level
 
 ```typescript
+import { provideHttpClient } from '@angular/common/http';
+import { ApplicationConfig } from '@angular/core';
 // app.config.ts
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -230,6 +238,7 @@ export const appConfig: ApplicationConfig = {
 ### Route Level
 
 ```typescript
+import { Routes } from '@angular/router';
 // app.routes.ts
 export const routes: Routes = [
   {
@@ -245,6 +254,7 @@ export const routes: Routes = [
 ### Component Level
 
 ```typescript
+import { Component } from '@angular/core';
 @Component({
   selector: 'app-feature',
   standalone: true,
@@ -261,6 +271,7 @@ export class FeatureComponent {}
 ### Optional Injection
 
 ```typescript
+import { Component, inject } from '@angular/core';
 @Component({
   template: `...`
 })
@@ -277,6 +288,7 @@ export class OptionalComponent {
 ### Self Injection
 
 ```typescript
+import { Component, inject } from '@angular/core';
 @Component({
   providers: [LocalService]
 })
@@ -289,6 +301,7 @@ export class SelfComponent {
 ### SkipSelf Injection
 
 ```typescript
+import { Component, inject } from '@angular/core';
 @Component({
   providers: [ConfigService]
 })
@@ -304,6 +317,7 @@ export class ChildComponent {
 ### Host Injection
 
 ```typescript
+import { inject, Directive } from '@angular/core';
 @Directive({
   selector: '[appChild]'
 })
@@ -318,6 +332,7 @@ export class ChildDirective {
 ### State Management Service
 
 ```typescript
+import { Injectable, computed, signal } from '@angular/core';
 @Injectable({ providedIn: 'root' })
 export class CartService {
   // Private state
@@ -371,6 +386,10 @@ export class CartService {
 ### Data Service with HTTP
 
 ```typescript
+import { Injectable, inject, signal } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { tap } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
 @Injectable({ providedIn: 'root' })
 export class ProductService {
   private http = inject(HttpClient);
@@ -438,6 +457,11 @@ export class ProductService {
 ### Auth Service
 
 ```typescript
+import { Injectable, inject, computed, signal } from '@angular/core';
+import { Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
+import { tap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private http = inject(HttpClient);
@@ -503,6 +527,7 @@ export class AuthService {
 ### Notification Service
 
 ```typescript
+import { Injectable, signal } from '@angular/core';
 @Injectable({ providedIn: 'root' })
 export class NotificationService {
   private notifications = signal<Notification[]>([]);
@@ -549,6 +574,7 @@ export class NotificationService {
 ## Testing Services
 
 ```typescript
+import { inject } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 

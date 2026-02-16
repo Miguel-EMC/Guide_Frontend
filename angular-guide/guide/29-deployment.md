@@ -101,6 +101,7 @@ export const environment = {
 **Using in code:**
 
 ```typescript
+import { Injectable } from '@angular/core';
 import { environment } from '../environments/environment';
 
 @Injectable({ providedIn: 'root' })
@@ -522,6 +523,7 @@ npx webpack-bundle-analyzer dist/my-app/stats.json
 ### Lazy Loading
 
 ```typescript
+import { Routes } from '@angular/router';
 export const routes: Routes = [
   {
     path: 'admin',
@@ -533,6 +535,7 @@ export const routes: Routes = [
 ### Preloading Strategy
 
 ```typescript
+import { provideRouter } from '@angular/router';
 provideRouter(routes, withPreloading(PreloadAllModules))
 ```
 
@@ -541,6 +544,7 @@ provideRouter(routes, withPreloading(PreloadAllModules))
 ### Health Endpoint
 
 ```typescript
+import { Component } from '@angular/core';
 // health.component.ts
 @Component({
   selector: 'app-health',

@@ -43,7 +43,7 @@ export class BasicFormComponent {
 ### FormControl with Validators
 
 ```typescript
-import { Validators } from '@angular/forms';
+import { Validators, FormControl } from '@angular/forms';
 
 name = new FormControl('', [
   Validators.required,
@@ -70,6 +70,7 @@ website = new FormControl('', [
 ### Typed FormControls
 
 ```typescript
+import { FormControl } from '@angular/forms';
 // Strongly typed
 const name = new FormControl<string>('John');
 const age = new FormControl<number | null>(null);
@@ -84,6 +85,8 @@ const required = new FormControl('', { nonNullable: true });
 ### Basic FormGroup
 
 ```typescript
+import { Component } from '@angular/core';
+import { Validators, FormGroup, FormControl, ReactiveFormsModule } from '@angular/forms';
 @Component({
   standalone: true,
   imports: [ReactiveFormsModule],
@@ -123,6 +126,7 @@ export class UserFormComponent {
 ### Nested FormGroups
 
 ```typescript
+import { Validators, FormGroup, FormControl } from '@angular/forms';
 userForm = new FormGroup({
   name: new FormControl('', Validators.required),
   email: new FormControl('', [Validators.required, Validators.email]),
@@ -152,6 +156,7 @@ userForm = new FormGroup({
 ### Typed FormGroup
 
 ```typescript
+import { FormGroup, FormControl } from '@angular/forms';
 interface UserForm {
   name: FormControl<string>;
   email: FormControl<string>;
@@ -173,6 +178,7 @@ const name: string = this.userForm.controls.name.value;
 Simplify form creation:
 
 ```typescript
+import { Component, inject } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 
 @Component({...})
@@ -199,6 +205,8 @@ export class FormBuilderComponent {
 ### NonNullable FormBuilder
 
 ```typescript
+import { inject } from '@angular/core';
+import { NonNullableFormBuilder, Validators } from '@angular/forms';
 private fb = inject(NonNullableFormBuilder);
 
 // All controls are non-nullable by default
@@ -216,6 +224,8 @@ this.form.reset(); // { name: '', email: '' }
 Dynamic list of controls:
 
 ```typescript
+import { Component, inject } from '@angular/core';
+import { FormBuilder, Validators, FormArray } from '@angular/forms';
 @Component({
   template: `
     <form [formGroup]="form">
@@ -257,6 +267,7 @@ export class PhoneListComponent {
 ### FormArray with FormGroups
 
 ```typescript
+import { Validators, FormGroup, FormArray } from '@angular/forms';
 form = this.fb.group({
   users: this.fb.array<FormGroup>([])
 });
@@ -315,7 +326,7 @@ removeUser(index: number) {
 ### Custom Validators
 
 ```typescript
-import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
+import { AbstractControl, ValidationErrors, ValidatorFn, Validators, FormControl } from '@angular/forms';
 
 // Simple validator function
 export function forbiddenNameValidator(forbiddenName: RegExp): ValidatorFn {
@@ -335,6 +346,7 @@ name = new FormControl('', [
 ### Cross-Field Validators
 
 ```typescript
+import { Validators } from '@angular/forms';
 export function passwordMatchValidator(): ValidatorFn {
   return (group: AbstractControl): ValidationErrors | null => {
     const password = group.get('password')?.value;
@@ -359,7 +371,9 @@ form = this.fb.group({
 ### Async Validators
 
 ```typescript
-import { AsyncValidatorFn } from '@angular/forms';
+import { AsyncValidatorFn, Validators, FormControl } from '@angular/forms';
+import { catchError, map } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
 
 export function uniqueEmailValidator(userService: UserService): AsyncValidatorFn {
   return (control: AbstractControl): Observable<ValidationErrors | null> => {
@@ -408,6 +422,7 @@ email = new FormControl('', {
 ### Error Helper
 
 ```typescript
+import { Component, computed, input } from '@angular/core';
 @Component({
   template: `
     <input formControlName="name" />
@@ -501,6 +516,8 @@ const data = this.form.getRawValue();
 ## Dynamic Forms
 
 ```typescript
+import { Component, OnInit } from '@angular/core';
+import { Validators, FormGroup, FormControl } from '@angular/forms';
 interface FormField {
   name: string;
   type: 'text' | 'email' | 'select' | 'checkbox';
@@ -579,6 +596,8 @@ export class DynamicFormComponent implements OnInit {
 ## Complete Form Example
 
 ```typescript
+import { Component, inject } from '@angular/core';
+import { NonNullableFormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 interface UserFormValue {
   personalInfo: {
     firstName: string;

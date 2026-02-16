@@ -35,6 +35,7 @@ console.log(count()); // 6
 ### Typed Signals
 
 ```typescript
+import { signal } from '@angular/core';
 // Explicit type
 const user = signal<User | null>(null);
 
@@ -62,6 +63,7 @@ const todos = signal<Todo[]>([]);
 ### set() vs update()
 
 ```typescript
+import { signal } from '@angular/core';
 const user = signal({ name: 'John', age: 30 });
 
 // set() - Replace entire value
@@ -77,6 +79,7 @@ user.update(current => ({
 ### Read-only Signals
 
 ```typescript
+import { Injectable, signal } from '@angular/core';
 @Injectable({ providedIn: 'root' })
 export class UserService {
   // Private writable signal
@@ -117,6 +120,7 @@ console.log(fullName()); // 'Jane Doe' (automatically updated)
 ### Complex Computations
 
 ```typescript
+import { signal, computed } from '@angular/core';
 interface CartItem {
   id: number;
   name: string;
@@ -150,6 +154,7 @@ const isEmpty = computed(() => cartItems().length === 0);
 ### Computed with Dependencies
 
 ```typescript
+import { signal, computed } from '@angular/core';
 const users = signal<User[]>([]);
 const searchTerm = signal('');
 const selectedRole = signal<string | null>(null);
@@ -197,6 +202,8 @@ count.set(2); // Logs: "Count changed to: 2"
 ### Effect Use Cases
 
 ```typescript
+import { Component, inject, signal, effect } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 @Component({...})
 export class DataComponent {
   private http = inject(HttpClient);
@@ -234,6 +241,7 @@ export class DataComponent {
 ### Effect Cleanup
 
 ```typescript
+import { effect } from '@angular/core';
 effect((onCleanup) => {
   const subscription = someObservable$.subscribe(value => {
     // Handle value
@@ -258,6 +266,7 @@ effect((onCleanup) => {
 ### Effect Options
 
 ```typescript
+import { effect } from '@angular/core';
 // Manual cleanup (no auto-destroy)
 const effectRef = effect(() => {
   console.log(count());
@@ -277,6 +286,7 @@ effect(() => {
 ## Signals in Components
 
 ```typescript
+import { Component, signal, computed } from '@angular/core';
 @Component({
   selector: 'app-counter',
   standalone: true,
@@ -354,7 +364,7 @@ export class UserCardComponent {
 ## Signal Outputs
 
 ```typescript
-import { Component, output } from '@angular/core';
+import { Component, output, signal } from '@angular/core';
 
 @Component({
   selector: 'app-search',
@@ -436,7 +446,7 @@ console.log(linked()); // 100
 Load async data as signals:
 
 ```typescript
-import { resource, signal } from '@angular/core';
+import { resource, signal, Component } from '@angular/core';
 
 @Component({...})
 export class UserProfileComponent {
@@ -478,7 +488,10 @@ export class UserProfileComponent {
 Convert Observable to Signal:
 
 ```typescript
+import { Component } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { map } from 'rxjs/operators';
+import { interval } from 'rxjs';
 
 @Component({...})
 export class TimeComponent {
@@ -498,7 +511,9 @@ export class TimeComponent {
 Convert Signal to Observable:
 
 ```typescript
+import { Component, signal } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
+import { switchMap, debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 @Component({...})
 export class SearchComponent {
@@ -524,6 +539,7 @@ export class SearchComponent {
 ### Simple Store
 
 ```typescript
+import { Injectable, computed, signal } from '@angular/core';
 @Injectable({ providedIn: 'root' })
 export class TodoStore {
   // State
@@ -589,6 +605,7 @@ export class TodoStore {
 ### Using the Store
 
 ```typescript
+import { Component, inject } from '@angular/core';
 @Component({
   template: `
     <div class="filters">
@@ -629,6 +646,8 @@ export class TodoListComponent {
 ### Do's
 
 ```typescript
+import { signal, computed, effect } from '@angular/core';
+import { last, first } from 'rxjs/operators';
 // ✅ Use computed for derived values
 const fullName = computed(() => `${first()} ${last()}`);
 
@@ -648,6 +667,7 @@ effect(() => {
 ### Don'ts
 
 ```typescript
+import { signal, computed } from '@angular/core';
 // ❌ Don't call signals conditionally in computed
 const bad = computed(() => {
   if (condition) {

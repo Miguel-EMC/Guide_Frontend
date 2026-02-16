@@ -155,6 +155,7 @@ describe('CounterComponent DOM', () => {
 ### Testing with Inputs
 
 ```typescript
+import { Component, input } from '@angular/core';
 @Component({
   selector: 'app-greeting',
   template: `<h1>Hello, {{ name() }}!</h1>`
@@ -208,6 +209,7 @@ describe('ButtonComponent outputs', () => {
 ### Basic Service Test
 
 ```typescript
+import { inject } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { UserService } from './user.service';
 
@@ -239,7 +241,9 @@ describe('UserService', () => {
 ### Vitest Mocking with vi.fn()
 
 ```typescript
+import { inject } from '@angular/core';
 import { vi } from 'vitest';
+import { HttpClient } from '@angular/common/http';
 
 describe('UserService with Vitest mocking', () => {
   let service: UserService;
@@ -280,6 +284,7 @@ describe('UserService with Vitest mocking', () => {
 ### Testing HTTP Services
 
 ```typescript
+import { inject } from '@angular/core';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 
 describe('ApiService', () => {
@@ -345,6 +350,7 @@ describe('ApiService', () => {
 ### Mocking Services
 
 ```typescript
+import { signal } from '@angular/core';
 describe('UserListComponent with mock', () => {
   let mockUserService: jasmine.SpyObj<UserService>;
 
@@ -577,6 +583,7 @@ describe('TruncatePipe', () => {
 ## Testing Directives
 
 ```typescript
+import { Component } from '@angular/core';
 @Component({
   template: `<div appHighlight [color]="color">Test</div>`
 })
@@ -677,7 +684,9 @@ ng g @schematics/angular:refactor-jasmine-vitest
 ```typescript
 // Before (Jasmine)
 import { TestBed } from '@angular/core/testing';
+```
 
+```typescript
 // After (Vitest)
 import { describe, it, expect, beforeEach } from 'vitest';
 import { TestBed } from '@angular/core/testing';
@@ -804,4 +813,4 @@ module.exports = function (config) {
 
 ---
 
-[Previous: Animations](./21-animations.md) (Chapter not yet available) | [Back to Index](./README.md) | [Next: SSR & Hydration](./23-ssr-hydration.md)
+[Previous: Animations](./21-animations.md) | [Back to Index](./README.md) | [Next: SSR & Hydration](./23-ssr-hydration.md)

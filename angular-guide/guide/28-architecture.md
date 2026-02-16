@@ -100,6 +100,7 @@ import { ButtonComponent, ModalComponent, TruncatePipe } from '@shared';
 **Smart Component (Container):**
 
 ```typescript
+import { Component, inject } from '@angular/core';
 @Component({
   selector: 'app-user-list-container',
   standalone: true,
@@ -132,6 +133,7 @@ export class UserListContainerComponent {
 **Presentational Component:**
 
 ```typescript
+import { Component, input, ChangeDetectionStrategy, output } from '@angular/core';
 @Component({
   selector: 'app-user-list',
   standalone: true,
@@ -165,6 +167,7 @@ export class UserListComponent {
 ### Component Composition
 
 ```typescript
+import { Component, input } from '@angular/core';
 @Component({
   selector: 'app-card',
   standalone: true,
@@ -203,6 +206,9 @@ export class CardComponent {
 ### Repository Pattern
 
 ```typescript
+import { Injectable, inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 // Base repository
 export abstract class BaseRepository<T extends { id: number }> {
   protected http = inject(HttpClient);
@@ -246,6 +252,7 @@ export class UserRepository extends BaseRepository<User> {
 ### Facade Pattern
 
 ```typescript
+import { Injectable, inject, computed } from '@angular/core';
 @Injectable({ providedIn: 'root' })
 export class ProductFacade {
   private productService = inject(ProductService);
@@ -292,6 +299,7 @@ export class ProductFacade {
 ### Simple Signal Store
 
 ```typescript
+import { Injectable, signal, computed } from '@angular/core';
 @Injectable({ providedIn: 'root' })
 export class TodoStore {
   // Private mutable state
@@ -347,6 +355,8 @@ export class TodoStore {
 ### Route Guards
 
 ```typescript
+import { inject } from '@angular/core';
+import { Router, CanActivateFn } from '@angular/router';
 // auth.guard.ts
 export const authGuard: CanActivateFn = (route, state) => {
   const auth = inject(AuthService);
@@ -385,6 +395,7 @@ export const roleGuard = (allowedRoles: string[]): CanActivateFn => {
 ### Lazy Loading
 
 ```typescript
+import { Routes } from '@angular/router';
 export const routes: Routes = [
   {
     path: '',
@@ -407,6 +418,8 @@ export const routes: Routes = [
 ### Global Error Handler
 
 ```typescript
+import { Injectable, inject } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
 @Injectable()
 export class GlobalErrorHandler implements ErrorHandler {
   private notificationService = inject(NotificationService);
@@ -487,6 +500,7 @@ const mockUserService = createMockService(UserService);
 ### Change Detection Strategy
 
 ```typescript
+import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `...`
@@ -535,4 +549,4 @@ export class OptimizedComponent {
 
 ---
 
-[Previous: PWA & Service Workers](./27-pwa.md) (Chapter not yet available) | [Back to Index](./README.md) | [Next: Deployment](./29-deployment.md)
+[Previous: PWA & Service Workers](./27-pwa.md) | [Back to Index](./README.md) | [Next: Deployment](./29-deployment.md)

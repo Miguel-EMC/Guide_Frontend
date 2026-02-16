@@ -158,6 +158,7 @@ Listen to DOM events and component outputs.
 ### Event Object
 
 ```typescript
+import { Component } from '@angular/core';
 // Component
 onInput(event: Event) {
   const input = event.target as HTMLInputElement;
@@ -496,6 +497,8 @@ Declare local variables in templates (v21):
 Render templates dynamically:
 
 ```typescript
+import { Component, input, TemplateRef } from '@angular/core';
+import { NgTemplateOutlet } from '@angular/common';
 @Component({
   selector: 'app-list',
   standalone: true,

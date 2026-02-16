@@ -97,6 +97,7 @@ export default bootstrap;
 
 ```typescript
 import { provideClientHydration } from '@angular/platform-browser';
+import { ApplicationConfig } from '@angular/core';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -108,6 +109,7 @@ export const appConfig: ApplicationConfig = {
 ### Hydration Options
 
 ```typescript
+import { ApplicationConfig } from '@angular/core';
 import {
   provideClientHydration,
   withEventReplay,
@@ -154,6 +156,8 @@ Or in template:
 Automatically transfers HTTP responses from server to client:
 
 ```typescript
+import { Component, inject, signal } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 // This request is made on server
 // Response is transferred to client, no duplicate request
 @Component({
@@ -297,6 +301,7 @@ export const serverRoutes: ServerRoute[] = [
 ### Meta Tags
 
 ```typescript
+import { Component, inject, effect } from '@angular/core';
 import { Meta, Title } from '@angular/platform-browser';
 
 @Component({...})
@@ -320,6 +325,10 @@ export class ProductComponent {
 ### Resolve Title
 
 ```typescript
+import { Injectable, inject } from '@angular/core';
+import { Routes } from '@angular/router';
+import { map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 export const routes: Routes = [
   {
     path: 'products/:id',
@@ -392,6 +401,7 @@ server.get('*', async (req, res, next) => {
 ### Window/Document Not Defined
 
 ```typescript
+import { Component } from '@angular/core';
 // ❌ Bad - crashes on server
 @Component({...})
 export class BadComponent {
@@ -414,6 +424,7 @@ export class GoodComponent {
 ### LocalStorage
 
 ```typescript
+import { Injectable, inject } from '@angular/core';
 // ❌ Bad
 const token = localStorage.getItem('token');
 
@@ -434,6 +445,7 @@ export class StorageService {
 ### Third-Party Libraries
 
 ```typescript
+import { Component, inject } from '@angular/core';
 @Component({...})
 export class ChartComponent {
   private platformId = inject(PLATFORM_ID);

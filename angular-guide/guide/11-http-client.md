@@ -190,7 +190,6 @@ this.http.get('/api/large-file', {
 ```typescript
 import { HttpInterceptorFn, HttpErrorResponse } from '@angular/common/http';
 import { inject } from '@angular/core';
-import { catchError, throwError } from 'rxjs';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService);
@@ -211,6 +210,8 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
 **logging.interceptor.ts:**
 
 ```typescript
+import { HttpInterceptorFn, HttpResponse } from '@angular/common/http';
+import { tap } from 'rxjs/operators';
 export const loggingInterceptor: HttpInterceptorFn = (req, next) => {
   const started = Date.now();
 
@@ -234,6 +235,11 @@ export const loggingInterceptor: HttpInterceptorFn = (req, next) => {
 **error.interceptor.ts:**
 
 ```typescript
+import { inject } from '@angular/core';
+import { Router } from '@angular/router';
+import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
+import { catchError } from 'rxjs/operators';
+import { throwError } from 'rxjs';
 export const errorInterceptor: HttpInterceptorFn = (req, next) => {
   const router = inject(Router);
   const notificationService = inject(NotificationService);
@@ -268,6 +274,8 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
 ### Register Interceptors
 
 ```typescript
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { ApplicationConfig } from '@angular/core';
 // app.config.ts
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -286,6 +294,7 @@ export const appConfig: ApplicationConfig = {
 
 ```typescript
 import { retry, timer } from 'rxjs';
+import { HttpInterceptorFn } from '@angular/common/http';
 
 export const retryInterceptor: HttpInterceptorFn = (req, next) => {
   return next(req).pipe(
@@ -306,6 +315,9 @@ export const retryInterceptor: HttpInterceptorFn = (req, next) => {
 ### Cache Interceptor
 
 ```typescript
+import { HttpInterceptorFn, HttpResponse } from '@angular/common/http';
+import { tap } from 'rxjs/operators';
+import { of } from 'rxjs';
 const cache = new Map<string, HttpResponse<any>>();
 
 export const cacheInterceptor: HttpInterceptorFn = (req, next) => {
@@ -332,6 +344,10 @@ export const cacheInterceptor: HttpInterceptorFn = (req, next) => {
 ## Data Service Pattern
 
 ```typescript
+import { Injectable, inject, signal } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { catchError, tap, finalize } from 'rxjs/operators';
+import { Observable, throwError } from 'rxjs';
 @Injectable({ providedIn: 'root' })
 export class ProductService {
   private http = inject(HttpClient);
@@ -400,6 +416,7 @@ export class ProductService {
 ### Single File
 
 ```typescript
+import { Observable } from 'rxjs';
 uploadFile(file: File): Observable<UploadResponse> {
   const formData = new FormData();
   formData.append('file', file, file.name);
@@ -411,6 +428,8 @@ uploadFile(file: File): Observable<UploadResponse> {
 ### With Progress
 
 ```typescript
+import { map, filter } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 uploadWithProgress(file: File): Observable<number | UploadResponse> {
   const formData = new FormData();
   formData.append('file', file);
@@ -436,6 +455,7 @@ uploadWithProgress(file: File): Observable<number | UploadResponse> {
 ### Component Usage
 
 ```typescript
+import { Component, inject, signal } from '@angular/core';
 @Component({
   template: `
     <input type="file" (change)="onFileSelected($event)" />
@@ -489,6 +509,9 @@ downloadFile(url: string, filename: string) {
 ## Typed HTTP Client
 
 ```typescript
+import { Injectable, inject } from '@angular/core';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Observable } from 'rxjs';
 interface ApiResponse<T> {
   data: T;
   message: string;
@@ -534,6 +557,9 @@ export class ApiService {
 ### Centralized Error Handler
 
 ```typescript
+import { Injectable } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
 @Injectable({ providedIn: 'root' })
 export class HttpErrorHandler {
   handle(error: HttpErrorResponse): Observable<never> {
@@ -583,6 +609,7 @@ export class HttpErrorHandler {
 ## Testing HTTP
 
 ```typescript
+import { inject } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 

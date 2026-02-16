@@ -77,6 +77,7 @@ export class DateComponent {
 Format currency:
 
 ```typescript
+import { Component } from '@angular/core';
 import { CurrencyPipe } from '@angular/common';
 
 @Component({
@@ -111,6 +112,7 @@ export class PriceComponent {
 Format numbers:
 
 ```typescript
+import { Component } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 
 @Component({
@@ -141,6 +143,7 @@ export class NumberComponent {
 Format percentages:
 
 ```typescript
+import { Component } from '@angular/core';
 import { PercentPipe } from '@angular/common';
 
 @Component({
@@ -158,6 +161,7 @@ export class PercentComponent {
 ### UpperCasePipe / LowerCasePipe / TitleCasePipe
 
 ```typescript
+import { Component } from '@angular/core';
 import { UpperCasePipe, LowerCasePipe, TitleCasePipe } from '@angular/common';
 
 @Component({
@@ -178,6 +182,7 @@ export class TextComponent {
 Slice arrays or strings:
 
 ```typescript
+import { Component } from '@angular/core';
 import { SlicePipe } from '@angular/common';
 
 @Component({
@@ -203,6 +208,7 @@ export class SliceComponent {
 Debug by displaying JSON:
 
 ```typescript
+import { Component } from '@angular/core';
 import { JsonPipe } from '@angular/common';
 
 @Component({
@@ -221,6 +227,7 @@ export class DebugComponent {
 Iterate over objects:
 
 ```typescript
+import { Component } from '@angular/core';
 import { KeyValuePipe } from '@angular/common';
 
 @Component({
@@ -250,6 +257,7 @@ export class ObjectComponent {
 Subscribe to Observables/Promises:
 
 ```typescript
+import { Component } from '@angular/core';
 import { AsyncPipe } from '@angular/common';
 import { Observable, interval } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -330,6 +338,7 @@ export class TruncatePipe implements PipeTransform {
 ### Filter Pipe
 
 ```typescript
+import { Pipe, PipeTransform } from '@angular/core';
 @Pipe({
   name: 'filter',
   standalone: true
@@ -355,6 +364,7 @@ export class FilterPipe implements PipeTransform {
 ### Search Pipe
 
 ```typescript
+import { Pipe, PipeTransform } from '@angular/core';
 @Pipe({
   name: 'search',
   standalone: true
@@ -388,6 +398,7 @@ export class SearchPipe implements PipeTransform {
 ### Sort Pipe
 
 ```typescript
+import { Pipe, PipeTransform } from '@angular/core';
 @Pipe({
   name: 'sort',
   standalone: true
@@ -457,6 +468,7 @@ export class HighlightPipe implements PipeTransform {
 ### Time Ago Pipe
 
 ```typescript
+import { Pipe, PipeTransform } from '@angular/core';
 @Pipe({
   name: 'timeAgo',
   standalone: true
@@ -500,6 +512,7 @@ export class TimeAgoPipe implements PipeTransform {
 ### File Size Pipe
 
 ```typescript
+import { Pipe, PipeTransform } from '@angular/core';
 @Pipe({
   name: 'fileSize',
   standalone: true
@@ -535,6 +548,7 @@ export class FileSizePipe implements PipeTransform {
 - Default behavior
 
 ```typescript
+import { Pipe } from '@angular/core';
 @Pipe({
   name: 'myPipe',
   standalone: true,
@@ -549,6 +563,7 @@ export class FileSizePipe implements PipeTransform {
 - Use sparingly (performance impact)
 
 ```typescript
+import { Pipe, PipeTransform } from '@angular/core';
 @Pipe({
   name: 'filterByStatus',
   standalone: true,
@@ -573,6 +588,7 @@ export class FilterByStatusPipe implements PipeTransform {
 **Better alternatives:**
 
 ```typescript
+import { computed } from '@angular/core';
 // Instead of impure pipe, use computed signal
 filteredItems = computed(() =>
   this.items().filter(item => item.status === this.statusService.activeStatus())
@@ -603,6 +619,10 @@ export class TranslatePipe implements PipeTransform {
 Create pipes that handle async operations:
 
 ```typescript
+import { inject, Pipe, PipeTransform } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { shareReplay } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 @Pipe({
   name: 'fetch',
   standalone: true
