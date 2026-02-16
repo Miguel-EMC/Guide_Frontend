@@ -1,6 +1,8 @@
-# Signal Forms (v21)
+# Signal Forms (v21 - Experimental)
 
-Angular v21 introduces Signal Forms, a new streamlined, signal-based approach to forms. Signal Forms integrate seamlessly with Angular's reactivity model and provide a more intuitive API.
+Angular v21 introduces Signal Forms as an **experimental** feature, providing a new streamlined, signal-based approach to forms. Signal Forms integrate seamlessly with Angular's reactivity model and offer a more intuitive API.
+
+> **Note:** Signal Forms are experimental and subject to change. Use with caution in production applications.
 
 ## Overview
 
@@ -17,29 +19,47 @@ Signal Forms replace traditional reactive forms with signal-based primitives:
 
 ```typescript
 import { Component } from '@angular/core';
-import { SignalFormsModule, formControl, formGroup, formArray } from '@angular/forms';
+import { 
+  SignalFormsModule, 
+  Field,
+  formControl, 
+  formGroup, 
+  formArray 
+} from '@angular/forms/signals';
 
 @Component({
   standalone: true,
-  imports: [SignalFormsModule],
+  imports: [SignalFormsModule, Field],
   template: `...`
 })
 export class FormComponent {}
 ```
 
+**Installation:**
+```bash
+# Signal Forms are included with Angular v21+
+# No additional installation needed
+```
+
+**Experimental API Import:**
+```typescript
+// Experimental - API may change
+import { form, Field } from '@angular/forms/signals';
+```
+
 ## Basic Signal Form
 
-### Simple Control
+### Simple Control with Field Directive
 
 ```typescript
 import { Component, computed } from '@angular/core';
-import { formControl, SignalFormsModule } from '@angular/forms';
+import { formControl, Field } from '@angular/forms/signals';
 
 @Component({
   standalone: true,
-  imports: [SignalFormsModule],
+  imports: [Field],
   template: `
-    <input [formControl]="name" />
+    <input [field]="name" />
     <p>Value: {{ name.value() }}</p>
     <p>Valid: {{ name.valid() }}</p>
     <p>Touched: {{ name.touched() }}</p>
@@ -54,6 +74,30 @@ export class BasicComponent {
   canSubmit = computed(() =>
     this.name.valid() && !this.name.pristine()
   );
+}
+```
+
+### Using the Experimental `form()` API
+
+```typescript
+import { Component } from '@angular/core';
+import { form, Field } from '@angular/forms/signals';
+
+@Component({
+  standalone: true,
+  imports: [Field],
+  template: `
+    <input [field]="loginForm.email" />
+    <input [field]="loginForm.password" />
+  `
+})
+export class LoginForm {
+  login = signal({
+    email: '',
+    password: ''
+  });
+  
+  loginForm = form(this.login);
 }
 ```
 
@@ -651,6 +695,33 @@ export class ProductFormComponent {
 | `control.valueChanges` | `effect(() => control.value())` |
 | `control.statusChanges` | `effect(() => control.status())` |
 
+### Migration Strategy
+
+1. **Start with new forms:** Use Signal Forms for new features
+2. **Gradual migration:** Convert existing forms one at a time
+3. **Hybrid approach:** Both can coexist in same application
+4. **Test thoroughly:** Signal Forms are experimental
+
+```typescript
+// During migration period
+import { ReactiveFormsModule, FormControl, FormGroup } from '@angular/forms';
+import { SignalFormsModule, formControl } from '@angular/forms/signals';
+
+@Component({
+  standalone: true,
+  imports: [ReactiveFormsModule, SignalFormsModule]
+})
+export class HybridFormComponent {
+  // Traditional Reactive Form
+  legacyForm = new FormGroup({
+    oldField: new FormControl('')
+  });
+
+  // New Signal Form
+  modernControl = formControl('');
+}
+```
+
 ## Summary
 
 | Feature | Description |
@@ -658,9 +729,26 @@ export class ProductFormComponent {
 | `formControl()` | Signal-based form control |
 | `formGroup()` | Signal-based form group |
 | `formArray()` | Signal-based form array |
+| `form()` | Experimental form from signal |
+| `Field` directive | Modern template binding |
 | State signals | `value()`, `valid()`, `touched()`, etc. |
 | Typed by default | Full TypeScript support |
 | Effect integration | React to form changes |
+
+### Important Notes
+
+- **Experimental API:** Subject to breaking changes
+- **No ControlValueAccessor:** Simplified custom component integration  
+- **Better performance:** Signal-based reactivity
+- **TypeScript first:** Strong typing built-in
+- **Modern patterns:** Works with zoneless applications
+
+### Current Limitations
+
+- Experimental API may change
+- Documentation still evolving
+- Community patterns emerging
+- Migration path from reactive forms ongoing
 
 ## Next Steps
 

@@ -21,11 +21,14 @@ Angular is a platform and framework for building single-page client applications
 
 | Feature | Description |
 |---------|-------------|
-| **Signal Forms** | New streamlined, signal-based approach to forms |
-| **MCP Server Tools** | AI-powered development workflow integration |
-| **Angular Aria** | Enhanced accessibility features |
-| **Performance Updates** | Improved hydration and rendering |
-| **Standalone by Default** | Components are standalone without NgModules |
+| **Signal Forms (Experimental)** | New streamlined, signal-based approach to forms |
+| **Zoneless by Default** | No more Zone.js - better performance, smaller bundles |
+| **Vitest Default Test Runner** | Stable Vitest support replaces Karma/Jasmine |
+| **Angular Aria (Developer Preview)** | 13 accessible, unstyled components |
+| **MCP Server Tools (Stable)** | AI-powered development with 7 tools |
+| **Enhanced Template Syntax** | Multiple switch case matching, regex support |
+| **Signal Formatter** | Built-in DevTools formatter for signals |
+| **Updated Dependencies** | TypeScript 5.9+, Node.js 20.19+ |
 
 ### Angular vs Other Frameworks
 
@@ -51,7 +54,8 @@ Angular is a platform and framework for building single-page client applications
 
 Before starting, ensure you have:
 
-- Node.js 20+ installed (LTS recommended)
+- Node.js 20.19+ or 22.12+ or 24.0+ installed
+- TypeScript 5.9.0+ (automatically installed with Angular)
 - npm 10+ or yarn/pnpm
 - Basic HTML, CSS, JavaScript knowledge
 - A code editor (VS Code recommended)
@@ -89,7 +93,17 @@ nvm use --lts
 ### Step 2: Install Angular CLI
 
 ```bash
-npm install -g @angular/cli
+npm install -g @angular/cli@latest
+```
+
+**For the latest Angular 21 features, ensure you have the latest CLI:**
+
+```bash
+# Verify you have Angular 21
+ng version
+
+# Update if needed
+npm update -g @angular/cli
 ```
 
 **Verify installation:**
@@ -102,7 +116,7 @@ Expected output:
 
 ```
 Angular CLI: 21.x.x
-Node: 20.x.x
+Node: 20.19.x / 22.12.x / 24.x.x
 Package Manager: npm 10.x.x
 ```
 
@@ -218,7 +232,7 @@ bootstrapApplication(AppComponent, appConfig)
 ### Step 5: Understanding app.config.ts
 
 ```typescript
-import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
+import { ApplicationConfig } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideHttpClient } from '@angular/common/http';
 
@@ -226,7 +240,8 @@ import { routes } from './app.routes';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideZoneChangeDetection({ eventCoalescing: true }),
+    // Zoneless is now the default in Angular 21
+    // No need for provideZoneChangeDetection anymore
     provideRouter(routes),
     provideHttpClient()
   ]

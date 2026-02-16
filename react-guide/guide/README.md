@@ -6,7 +6,7 @@ Welcome to the comprehensive guide to building modern, scalable web applications
 
 ### Fundamentals
 
-1.  [Introduction & Setup](./01-introduction.md) (Chapter not yet available)
+1.  [Introduction & Setup](./01-introduction.md)
 2.  [JSX & Components](./02-jsx-components.md) (Chapter not yet available)
 3.  [Props & State](./03-props-state.md) (Chapter not yet available)
 4.  [Conditional & List Rendering](./04-rendering.md) (Chapter not yet available)

@@ -1,25 +1,45 @@
 # Testing
 
-Angular provides a robust testing infrastructure using Jasmine and Karma for unit tests, and supports Playwright/Cypress for end-to-end tests.
+Angular v21 introduces Vitest as the new default test runner, providing faster, more modern testing experience. Legacy Jasmine/Karma support remains available for migration. Angular supports Playwright/Cypress for end-to-end tests.
 
 ## Testing Setup
 
-Angular CLI projects include testing by default:
+### Vitest (Default in Angular 21)
+
+Angular 21 projects use Vitest by default:
 
 ```bash
-# Run unit tests
+# Run unit tests with Vitest
 ng test
 
 # Run with code coverage
 ng test --code-coverage
 
 # Run once (CI mode)
-ng test --watch=false --browsers=ChromeHeadless
+ng test --watch=false --run
+
+# Run specific test file
+ng test counter.component.spec.ts
+```
+
+### Jasmine/Karma (Legacy)
+
+For projects still using Jasmine/Karma:
+
+```bash
+# Run unit tests
+ng test --test-runner karma
+
+# Run with code coverage
+ng test --test-runner karma --code-coverage
+
+# Run once (CI mode)
+ng test --test-runner karma --watch=false --browsers=ChromeHeadless
 ```
 
 ## Unit Testing Components
 
-### Basic Component Test
+### Basic Component Test (Vitest)
 
 ```typescript
 import { ComponentFixture, TestBed } from '@angular/core/testing';
@@ -59,6 +79,38 @@ describe('CounterComponent', () => {
     expect(component.count()).toBe(1);
   });
 });
+```
+
+### Vitest Advantages
+
+| Feature | Vitest | Jasmine/Karma |
+|---------|--------|---------------|
+| **Speed** | 5-10x faster | Slower startup |
+| **Watch Mode** | Intelligent file watching | Full reload |
+| **TypeScript** | Native support | Requires transpilation |
+| **API** | Jest-compatible | Jasmine API |
+| **Parallel** | Built-in parallel runs | Limited parallelization |
+| **Coverage** | v8/c8 built-in | Istanbul coverage |
+
+### Vitest Configuration
+
+Angular 21 automatically configures Vitest. Custom configuration in `vitest.config.ts`:
+
+```typescript
+import { defineConfig } from 'vitest/config';
+import { AngularViteConfig } from '@angular/build';
+
+export default defineConfig(AngularViteConfig({
+  test: {
+    globals: true,
+    environment: 'jsdom',
+    include: ['src/**/*.{test,spec}.{ts,js}'],
+    coverage: {
+      provider: 'v8',
+      reporter: ['text', 'json', 'html']
+    }
+  }
+}));
 ```
 
 ### Testing DOM
@@ -180,6 +232,47 @@ describe('UserService', () => {
   it('should add user', () => {
     service.addUser({ id: 1, name: 'John' });
     expect(service.getUsers()().length).toBe(1);
+  });
+});
+```
+
+### Vitest Mocking with vi.fn()
+
+```typescript
+import { vi } from 'vitest';
+
+describe('UserService with Vitest mocking', () => {
+  let service: UserService;
+  let mockHttpClient: any;
+
+  beforeEach(() => {
+    mockHttpClient = {
+      get: vi.fn(),
+      post: vi.fn()
+    };
+
+    TestBed.configureTestingModule({
+      providers: [
+        UserService,
+        { provide: HttpClient, useValue: mockHttpClient }
+      ]
+    });
+    service = TestBed.inject(UserService);
+  });
+
+  it('should fetch users via HTTP', async () => {
+    const mockUsers = [{ id: 1, name: 'John' }];
+    mockHttpClient.get.mockResolvedValue(mockUsers);
+
+    const users = await service.fetchUsers();
+    expect(users).toEqual(mockUsers);
+    expect(mockHttpClient.get).toHaveBeenCalledWith('/api/users');
+  });
+
+  it('should handle HTTP errors', async () => {
+    mockHttpClient.get.mockRejectedValue(new Error('Network error'));
+
+    await expect(service.fetchUsers()).rejects.toThrow('Network error');
   });
 });
 ```
@@ -562,11 +655,97 @@ test.describe('App', () => {
 });
 ```
 
+## Migration to Vitest
+
+### Automatic Migration
+
+Angular 21 provides automatic migration from Jasmine to Vitest:
+
+```bash
+# Run the migration schematic
+ng g @schematics/angular:refactor-jasmine-vitest
+
+# This will:
+# - Update test files to Vitest syntax
+# - Add Vitest configuration
+# - Update package.json dependencies
+```
+
+### Manual Migration Steps
+
+1. **Update test imports:**
+```typescript
+// Before (Jasmine)
+import { TestBed } from '@angular/core/testing';
+
+// After (Vitest)
+import { describe, it, expect, beforeEach } from 'vitest';
+import { TestBed } from '@angular/core/testing';
+```
+
+2. **Replace Jasmine spies with vi.fn():**
+```typescript
+// Before (Jasmine)
+const spy = jasmine.createSpyObj('Service', ['method']);
+spy.method.and.returnValue('value');
+
+// After (Vitest)
+const spy = { method: vi.fn() };
+spy.method.mockReturnValue('value');
+```
+
+3. **Update assertions:**
+```typescript
+// Before (Jasmine)
+expect(spy.method).toHaveBeenCalled();
+expect(spy.method).toHaveBeenCalledWith('arg');
+
+// After (Vitest) - same API
+expect(spy.method).toHaveBeenCalled();
+expect(spy.method).toHaveBeenCalledWith('arg');
+```
+
 ## Test Configuration
 
-### karma.conf.js
+### Vitest Configuration (Angular 21 Default)
+
+Created automatically in `vitest.config.ts`:
+
+```typescript
+import { defineConfig } from 'vitest/config';
+import { AngularViteConfig } from '@angular/build';
+
+export default defineConfig(AngularViteConfig({
+  test: {
+    globals: true,
+    environment: 'jsdom',
+    include: ['src/**/*.{test,spec}.{ts,js}'],
+    exclude: ['node_modules', 'dist'],
+    coverage: {
+      provider: 'v8',
+      reporter: ['text', 'json', 'html'],
+      exclude: [...],
+      thresholds: {
+        global: {
+          branches: 80,
+          functions: 80,
+          lines: 80,
+          statements: 80
+        }
+      }
+    },
+    watch: true,
+    reporters: ['verbose']
+  }
+}));
+```
+
+### Legacy Karma Configuration
+
+For projects still using Karma:
 
 ```javascript
+// karma.conf.js
 module.exports = function (config) {
   config.set({
     basePath: '',
@@ -597,8 +776,8 @@ module.exports = function (config) {
 
 | Test Type | Purpose | Tools |
 |-----------|---------|-------|
-| Unit | Test components, services, pipes | Jasmine, TestBed |
-| Integration | Test component interactions | TestBed, ComponentFixture |
+| Unit | Test components, services, pipes | Vitest (default), TestBed |
+| Integration | Test component interactions | Vitest, ComponentFixture |
 | E2E | Test full user flows | Playwright, Cypress |
 
 | Utility | Purpose |
@@ -607,6 +786,16 @@ module.exports = function (config) {
 | `ComponentFixture` | Access component and DOM |
 | `fakeAsync/tick` | Control async timing |
 | `HttpTestingController` | Mock HTTP requests |
+| `vi.fn()` | Vitest function mocking |
+| `describe/it/expect` | Vitest test framework |
+
+### Testing in Angular 21
+
+- **Vitest** is now the default test runner for new projects
+- **Migration tools** available to convert existing Jasmine tests
+- **Better performance** with faster startup and watch mode
+- **Modern API** compatible with Jest ecosystem
+- **Legacy support** for Jasmine/Karma during migration period
 
 ## Next Steps
 
